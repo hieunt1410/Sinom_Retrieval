@@ -18,7 +18,6 @@ from tqdm import tqdm
 import os
 
 def initiate(hyp_params, train_loader, valid_loader, test_loader=None):
-    feature_extractor = torch.hub.load('pytorch/vision:v0.10.0', hyp_params.cnn_model, pretrained=True)
     for param in feature_extractor.features.parameters():
         param.requires_grad = False
 
