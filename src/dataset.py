@@ -21,14 +21,13 @@ class ImgDataset(Dataset):
                 else:
                     self.images.append(os.path.join(path, f'queries/{i.strip()}.png'))
 
-        print(self.images)
     def __len__(self):
         return len(self.images)
     
     def __getitem__(self, idx):
         img_path = self.images[idx]
         
-        img = Image.open(img_path)
+        img = Image.open(img_path).convert('RGB')
         target = [0] * 252
         target[self.targets[idx]] = 1
         
