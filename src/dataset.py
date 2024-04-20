@@ -12,7 +12,7 @@ class ImgDataset(Dataset):
         with open(os.path.join(path, f'{split}.csv'), 'r') as f:
             line = f.readline()
             self.targets = line.strip().split(',')
-            self.images = [os.path.join(path, f'pairs/print/{i}.png') for i in targets]
+            self.images = [os.path.join(path, f'pairs/print/{i}.png') for i in self.targets]
 
     def __len__(self):
         return len(self.images)
