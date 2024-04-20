@@ -17,6 +17,7 @@ parser.add_argument('--optim', type=str, default='AdamW', help='optimizer to use
 parser.add_argument('--num_epochs', type=int, default=3, help='number of epochs (default: 3)')
 parser.add_argument('--log_interval', type=int, default=5, help='frequency of result logging (default: 100)')
 parser.add_argument('--seed', type=int, default=2024, help='random seed')
+parser.add_argument('--when', type=int, default=2, help='when to decay learning rate (default: 2)')
 
 args = parser.parse_args()
 output_dim = 252
