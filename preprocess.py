@@ -3,13 +3,13 @@ import pandas as pd
 
 seed = 2024
 
-arr = np.arange(252)
+arr = np.arange(228)
 np.random.seed(seed)
 np.random.shuffle(arr)
 
 train = arr[:int(0.8*len(arr))]
-valid = arr[int(0.8*len(arr)):int(0.9*len(arr))]
-test = arr[int(0.9*len(arr)):]
+valid = arr[int(0.8*len(arr)):]
+test = np.arange(228, 252)
 
 train = pd.DataFrame(train)
 valid = pd.DataFrame(valid)
