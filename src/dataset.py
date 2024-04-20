@@ -21,7 +21,7 @@ class ImgDataset(Dataset):
         img_path = self.images[idx]
         
         img = Image.open(img_path).convert('RGB')
-        target = [] * 252
+        target = [0] * 252
         target[self.targets[idx]] = 1
         
         if self.transform:
