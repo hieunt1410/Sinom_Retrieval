@@ -9,10 +9,14 @@ from torch.utils.data.dataset import Dataset
 class ImgDataset(Dataset):
     def __init__(self, path, split, transform=None):
         self.transform = transform
+        
+        self.targets = []
+        self.images = [os.path.join(path, f'pairs/print/{i}.png') for i in self.targets]
         with open(os.path.join(path, f'{split}.csv'), 'r') as f:
-            line = f.readline()
-            self.targets = [int(i) for i in line.strip().split(',')]
-            self.images = [os.path.join(path, f'pairs/print/{i}.png') for i in self.targets]
+            line = f.readlines()
+            for i in line:
+                self.targets.append(int(i.strip()))
+                self.images.append(os.path.join(path, f'pairs/print/{i}.png'))
 
     def __len__(self):
         return len(self.images)
