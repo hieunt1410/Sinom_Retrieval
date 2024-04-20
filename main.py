@@ -26,7 +26,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 print("Start loading the data....")
 train_data = get_data(args, 'train')
-valid_data = get_data(args, 'dev')
+valid_data = get_data(args, 'valid')
 test_data = get_data(args, 'test')
 
 train_loader = DataLoader(train_data, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers)
