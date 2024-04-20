@@ -18,7 +18,6 @@ from tqdm import tqdm
 import os
 
 def initiate(hyp_params, train_loader, valid_loader, test_loader=None):
-    hyp_params.feature_extractor = feature_extractor
     model = getattr(models, hyp_params.model)(hyp_params)
     model.to(hyp_params.device)
     
