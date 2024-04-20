@@ -11,7 +11,7 @@ class ImgDataset(Dataset):
         self.transform = transform
         
         self.targets = []
-        self.images = [os.path.join(path, f'pairs/print/{i}.png') for i in self.targets]
+        self.images = []
         with open(os.path.join(path, f'{split}.csv'), 'r') as f:
             line = f.readlines()
             for i in line:
