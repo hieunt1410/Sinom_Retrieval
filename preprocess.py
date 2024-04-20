@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 seed = 2024
 
@@ -9,6 +10,10 @@ np.random.shuffle(arr)
 train = arr[:int(0.8*len(arr))]
 valid = arr[int(0.8*len(arr)):int(0.9*len(arr))]
 test = arr[int(0.9*len(arr)):]
+
+train = pd.DataFrame(train)
+valid = pd.DataFrame(valid)
+test = pd.DataFrame(test)
 
 train.to_csv('data/train.csv', index=False)
 valid.to_csv('data/valid.csv', index=False)
