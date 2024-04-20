@@ -18,7 +18,7 @@ class ImgDataset(Dataset):
         return len(self.images)
     
     def __getitem__(self, idx):
-        img_path = os.path.join(self.path, 'pairs/print', self.images[idx])
+        img_path = self.images[idx]
         
         img = Image.open(img_path).convert('RGB')
         target = [] * len(self.targets)
