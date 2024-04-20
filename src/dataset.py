@@ -20,7 +20,7 @@ class ImgDataset(Dataset):
     def __getitem__(self, idx):
         img_path = self.images[idx]
         
-        img = Image.open(img_path).convert('RGB')
+        img = Image.open(img_path)
         target = [0] * 252
         target[self.targets[idx]] = 1
         
