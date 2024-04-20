@@ -16,7 +16,7 @@ class ImgDataset(Dataset):
             line = f.readlines()
             for i in line:
                 self.targets.append(int(i.strip()))
-                self.images.append(os.path.join(path, f'pairs/print/{i}.png'))
+                self.images.append(os.path.join(path, f'pairs/print/{i.strip()}.png'))
 
     def __len__(self):
         return len(self.images)
