@@ -18,7 +18,7 @@ from tqdm import tqdm
 import os
 
 def initiate(hyp_params, train_loader, valid_loader, test_loader=None):
-    model = getattr(models, hyp_params.model)(hyp_params)
+    model = getattr(models, hyp_params.model)(252)
     model.to(hyp_params.device)
     
     optimizer = getattr(optim, hyp_params.optim)(model.parameters(), lr=hyp_params.lr, weight_decay=1e-4)
