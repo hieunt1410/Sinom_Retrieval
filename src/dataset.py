@@ -21,6 +21,7 @@ class ImgDataset(Dataset):
                 else:
                     self.images.append(os.path.join(path, f'queries/{i.strip()}.png'))
 
+        print(self.images)
     def __len__(self):
         return len(self.images)
     
