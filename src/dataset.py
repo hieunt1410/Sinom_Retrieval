@@ -7,11 +7,12 @@ from PIL import Image
 from torch.utils.data.dataset import Dataset
 
 class ImgDataset(Dataset):
-    def __init__(self, path, transform=None):
+    def __init__(self, path, split, transform=None):
         self.transform = transform
-        
-        images = [i for i in os.listdir(os.path.join(path, 'pairs/print'))]
-        targets = [i for i in range(len(os.listdir(os.path.join(path, 'pairs/stl'))))]
+        with open(os.path.join(path, f'{split}.csv'), 'r') as f:
+            line = f.readline()
+            targets = line.split(',')
+            images = [os.listdir(os.path.join(path, f'pairs/print/{i}.png')) for i in targets]
 
     def __len__(self):
         return len(self.images)
