@@ -46,7 +46,7 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
     criterion = settings['criterion']
     scheduler = settings['scheduler']
     
-    def train(model, bert, tokenizer, feature_extractor, optimizer, criterion):
+    def train(model, optimizer, criterion):
         epoch_loss = 0
         model.train()
         num_batches = hyp_params.n_train // hyp_params.batch_size
@@ -83,7 +83,7 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
         truths = torch.cat(truths)
         return results, truths, avg_loss
 
-    def evaluate(model, bert, tokenizer, feature_extractor, criterion, test=False):
+    def evaluate(model, criterion, test=False):
         model.eval()
         loader = test_loader if test else valid_loader
         total_loss = 0.0
@@ -121,8 +121,8 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
     # writer = SummaryWriter('runs/'+hyp_params.model)
     for epoch in range(1, hyp_params.num_epochs+1):
         
-        train_results, train_truths, train_loss = train(model, bert, tokenizer, feature_extractor, optimizer, criterion)
-        val_results, val_truths, val_loss = evaluate(model, bert, tokenizer, feature_extractor, criterion, test=False)
+        train_results, train_truths, train_loss = train(model, optimizer, criterion)
+        val_results, val_truths, val_loss = evaluate(model, criterion, test=False)
         
         scheduler.step(val_loss)
 
@@ -141,7 +141,7 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
 
     if test_loader is not None:
         model = load_model(hyp_params, name=hyp_params.name)
-        results, truths, val_loss = evaluate(model, bert, tokenizer, feature_extractor, criterion, test=True)
+        results, truths, val_loss = evaluate(model, criterion, test=True)
         test_mrr = metrics(results, truths)
         
         print("\n\nTest MRR {:5.4f}".format(test_mrr))
