@@ -7,4 +7,6 @@ mrr = RetrievalMRR()
 mrr.to(device)
 
 def metrics(results, truths):
-    return mrr(torch.tensor(results), torch.tensor(truths), top_k=5)
+    # results, indices = torch.topk(results, 5)
+    
+    return mrr(torch.tensor(results), torch.tensor(truths))
