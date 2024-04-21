@@ -8,5 +8,5 @@ mrr.to(device)
 
 def metrics(results, truths):
     # results, indices = torch.topk(results, 5)
-    indexes = torch.ones((truths.shape[0], truths.shape[1]), dtype=torch.float32)
+    indexes = torch.ones((truths.shape[0], truths.shape[1]), dtype=torch.long, device=device)
     return mrr(torch.tensor(results), torch.tensor(truths), indexes=indexes)
