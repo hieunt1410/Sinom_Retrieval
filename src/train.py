@@ -132,7 +132,7 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
         if epoch == 1:
             print(f'Epoch  |     Train Loss     |     Train MRR     |     Valid Loss     |     Valid MRR     |')
         
-        print(f'{epoch:^7d}|{train_loss:^20.4f}|{train_mrr:^20.4f}|{val_loss:^20.4f}|{val_mrr:^20.4f}|')
+        print(f'{epoch:^7d}|{train_loss:^20.4f}|{train_mrr:^19.4f}|{val_loss:^20.4f}|{val_mrr:^19.4f}|')
 
         if val_loss < best_valid:
             print(f"Saved model at pretrained_models/default_model.pt!")
@@ -140,7 +140,7 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
             best_valid = val_loss
 
     if test_loader is not None:
-        model = load_model(hyp_params, name=hyp_params.name)
+        model = load_model(hyp_params)
         results, truths, val_loss = evaluate(model, criterion, test=True)
         test_mrr = metrics(results, truths)
         
