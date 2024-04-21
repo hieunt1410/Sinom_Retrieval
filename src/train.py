@@ -13,7 +13,7 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch import nn
 from tqdm import tqdm
 
-# from src.metrics import *
+from src.metrics import *
 
 import os
 
