@@ -36,5 +36,5 @@ class ImgDataset(Dataset):
         
         return {
             'image': img,
-            'label': torch.tensor(target)
+            'label': torch.FloatTensor(target)
         }
