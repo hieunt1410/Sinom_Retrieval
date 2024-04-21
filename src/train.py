@@ -66,6 +66,7 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
             optimizer.zero_grad()
 
             outputs = model(images)
+            outputs = torch.FloatTensor(outputs)
             preds = outputs
             
             loss = criterion(outputs, targets)
