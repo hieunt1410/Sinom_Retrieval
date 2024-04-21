@@ -24,6 +24,7 @@ output_dim = 252
 
 criterion = 'CrossEntropyLoss'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+torch.set_default_tensor_type(torch.FloatTensor)
 
 print("Start loading the data....")
 train_data = get_data(args, 'train')
