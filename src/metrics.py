@@ -3,7 +3,7 @@ import numpy as np
 from torchmetrics.retrieval import RetrievalMRR
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-mrr = RetrievalMRR()
+mrr = RetrievalMRR(top_k=5)
 mrr.to(device)
 
 def metrics(results, truths):
