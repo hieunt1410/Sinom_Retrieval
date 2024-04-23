@@ -4,6 +4,7 @@ import pandas as pd
 from PIL import Image
 from torchvision import transforms
 import argparse
+from models import CNN
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--img_path', type=str, default='data/queries/228.png')
@@ -16,8 +17,10 @@ transform=transforms.Compose([
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
 
+model = CNN(252)
+
 def infer(img_path, model_path='pretrained_models/default_model.pt'):
-    torch.load(model_path)
+    model.load_state_dict(torch.load(model_path))
     img = Image.open(img_path).convert('RGB')
     img = transform(img)
     output = model(img)
