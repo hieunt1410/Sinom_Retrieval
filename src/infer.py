@@ -4,7 +4,7 @@ import pandas as pd
 from PIL import Image
 from torchvision import transforms
 import argparse
-from models import CNN
+from src.models import CNN
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--img_path', type=str, default='data/queries/228.png')
