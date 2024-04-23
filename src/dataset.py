@@ -30,6 +30,7 @@ class ImgDataset(Dataset):
         img = Image.open(img_path).convert('RGB')
         target = [0] * 252
         target[self.targets[idx]] = 1
+        # target = self.targets[idx]
         
         if self.transform:
             img = self.transform(img)

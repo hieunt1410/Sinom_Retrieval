@@ -8,9 +8,9 @@ class CNN(nn.Module):
         self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1)
         self.pool = nn.MaxPool2d(4, 4)
         self.conv2 = nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1)
-        self.fc1 = nn.Linear(32 * 32 * 32, 120)
-        self.fc2 = nn.Linear(120, 84)
-        self.fc3 = nn.Linear(84, num_classes)
+        self.fc1 = nn.Linear(32 * 32 * 32, 1000)
+        self.fc2 = nn.Linear(1000, 500)
+        self.fc3 = nn.Linear(500, 252)
 
     def forward(self, x):
         x = self.pool(F.relu(self.conv1(x)))
