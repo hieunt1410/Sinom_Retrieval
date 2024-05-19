@@ -106,5 +106,5 @@ if __name__ == '__main__':
     indices_list = compute_similar_images(cfg.TEST_IMAGE_PATH, cfg.NUM_IMAGES, embedding, encoder, device)
     plot_similar_images(cfg.TEST_IMAGE_PATH, indices_list)
     
-    indices_list = compute_similar_features(cfg.TEST_IMAGE_PATH, cfg.NUM_IMAGES, embedding, device, nfeatures=30)
-    plot_similar_images(cfg.TEST_IMAGE_PATH, indices_list)      
+    # indices_list = compute_similar_features(cfg.TEST_IMAGE_PATH, cfg.NUM_IMAGES, embedding, device, nfeatures=30)
+    # plot_similar_images(cfg.TEST_IMAGE_PATH, indices_list)      
