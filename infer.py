@@ -39,7 +39,7 @@ def compute_similar_images(image_path, num_images, embedding, encoder, device):
     knn = NearestNeighbors(n_neighbors=num_images, metric='cosine')
     knn.fit(embedding)
     
-    _, indices = knn.kneighbors(image_embedding)
+    _, indices = knn.kneighbors(flatten_embedding)
     indices_list = indices.tolist()
     
     return indices_list
