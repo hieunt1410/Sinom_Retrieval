@@ -65,13 +65,13 @@ def compute_similar_features(image_path, num_images, embedding, device, nfeature
 
 def plot_similar_images(test_img_path, indices_list):
     
-    if not os.path.exists('../outputs'):
-        os.mkdir('../outputs')
+    if not os.path.exists('./outputs'):
+        os.mkdir('./outputs')
     
     test_img_name = test_img_path.split('/')[-1].split('.')[0]
     
-    if not os.path.exists(f'../outputs/{test_img_name}'):
-        os.mkdir(f'../outputs/{test_img_name}')
+    if not os.path.exists(f'./outputs/{test_img_name}'):
+        os.mkdir(f'./outputs/{test_img_name}')
     
     indices = indices_list[0]
     
@@ -81,7 +81,7 @@ def plot_similar_images(test_img_path, indices_list):
         img = Image.open(img_path).convert('RGB')
         plt.imshow(img)
         plt.show()
-        img.save(os.path.join(f'../outputs/{test_img_name}', img_name))
+        img.save(os.path.join(f'./outputs/{test_img_name}', img_name))
         
                 
 if __name__ == '__main__':
