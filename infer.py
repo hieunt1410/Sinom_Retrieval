@@ -102,7 +102,7 @@ if __name__ == '__main__':
     embedding = np.load(cfg.EMBEDDING_PATH)
     
     indices_list = compute_similar_images(cfg.TEST_IMAGE_PATH, cfg.NUM_IMAGES, embedding, encoder, device)
-    plot_similar_images(test_img_path, indices_list)
+    plot_similar_images(cfg.TEST_IMAGE_PATH, indices_list)
     
     indices_list = compute_similar_features(cfg.TEST_IMAGE_PATH, cfg.NUM_IMAGES, embedding, device, nfeatures=30)
-    plot_similar_images(test_img_path, indices_list)      
+    plot_similar_images(cfg.TEST_IMAGE_PATH, indices_list)      
