@@ -13,6 +13,7 @@ from sklearn.neighbors import NearestNeighbors
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 
+from IPython.display import display
 
 transform = transforms.Compose([
                 transforms.Resize((512, 512)),
@@ -88,8 +89,9 @@ def plot_similar_images(test_img_path, indices_list):
         img_name = str(index) + '.png'
         img_path = os.path.join(cfg.DATA_PATH, 'database_2D', img_name)
         img = Image.open(img_path).convert('RGB')
-        plt.imshow(img)
-        plt.show()
+        # plt.imshow(img)
+        # plt.show()
+        display(img)
         img.save(os.path.join(f'./outputs/{test_img_name}', img_name))
         
                 
