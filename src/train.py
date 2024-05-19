@@ -55,10 +55,6 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
     def train(encoder, decoder, optimizer, criterion):
         encoder.train()
         decoder.train()
-        
-        results = []
-        truths = []
-        losses = 0
             
         for batch_idx, (query_img, target_img) in enumerate(train_loader):
             query_img = query_img.to(hyp_params.device)
@@ -72,13 +68,9 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
             loss = criterion(dec_output, target_img)            
             loss.backward()
             
-            losses += loss.item()
-            results.append(dec_output)
-            truths.append(target_img)
-            
             optimizer.step()
         
-        return torch.cat(results), torch.cat(truths), losses/len(train_loader)
+        return loss.item()
             
 
     def evaluate(encoder, decoder, criterion, test=False):
@@ -86,9 +78,6 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
         decoder.eval()
         
         with torch.no_grad():
-            results = []
-            truths = []
-            losses = 0
             
             for batch_idx, (query_img, target_img) in enumerate(valid_loader if not test else test_loader):
                 query_img = query_img.to(hyp_params.device)
@@ -98,12 +87,8 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
                 dec_output = decoder(enc_output)
                 
                 loss = criterion(dec_output, target_img)
-                losses += loss.item()
-                
-                results.append(dec_output)
-                truths.append(target_img)
         
-        return torch.cat(results), torch.cat(truths), losses/len(valid_loader if not test else test_loader)
+        return loss.item()
 
     best_valid = 1e8
     # writer = SummaryWriter('runs/'+hyp_params.model)
