@@ -144,7 +144,7 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
         print("\n\nTest loss {:5.4f}".format(val_loss))
         
 
-    def create_embedding(self, encoder, full_loader, embedding_dim):
+    def create_embedding(encoder, full_loader, embedding_dim):
         encoder.eval()
         
         embedding = torch.randn(embedding_dim)
@@ -160,7 +160,7 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
                 
         return embedding
     
-    embedding = self.create_embedding(
+    embedding = create_embedding(
         encoder, train_loader, cfg.EMBEDDING_SHAPE, device
     )
     
