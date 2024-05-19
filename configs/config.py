@@ -15,9 +15,9 @@ FULL_BATCH_SIZE = 256
 
 DATA_PATH = "../"
 AUTOENCODER_MODEL_PATH = "baseline_autoencoder.pt"
-ENCODER_MODEL_PATH = "../pretrained/deep_encoder.pt"
-DECODER_MODEL_PATH = "../pretrained/deep_decoder.pt"
-EMBEDDING_PATH = "../pretrained/data_embedding_f.npy"
+ENCODER_MODEL_PATH = "./pretrained/deep_encoder.pt"
+DECODER_MODEL_PATH = "./pretrained/deep_decoder.pt"
+EMBEDDING_PATH = "./pretrained/data_embedding_f.npy"
 EMBEDDING_SHAPE = (1, 256, 16, 16)
 # TEST_RATIO = 0.2
 
