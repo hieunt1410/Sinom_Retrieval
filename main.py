@@ -6,6 +6,8 @@ from src import train
 import numpy as np
 import os
 
+import configs.config as cfg
+
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--data_path', type=str, default='../', help='path for storing the dataset')
