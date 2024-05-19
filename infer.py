@@ -54,16 +54,19 @@ def compute_similar_features(image_path, num_images, embedding, device, nfeature
     #Compute descriptors with ORB
     keypoint_features, des = orb.compute(image, keypoint_features)
     
-    des = des / 255.
+    des = des / 255.0
     des = np.expand_dims(des, axis=0)
     des = np.reshape(des, (des.shape[0], -1))
     
-    pca = PCA(n_components=10)
+    n_components = min(embedding.shape[1], des.shape[1])
+    pca = PCA(n_components=n_components)
+    
     reduced_embedding = pca.fit_transform(embedding)
+    des_reduced = pca.transform(des)
     
     knn = NearestNeighbors(n_neighbors=num_images, metric='cosine')
     knn.fit(reduced_embedding)
-    _, indices = knn.kneighbors(des)
+    _, indices = knn.kneighbors(des_reduced)
     
     indices_list = indices.tolist()
     
