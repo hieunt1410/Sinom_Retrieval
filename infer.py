@@ -58,7 +58,7 @@ def compute_similar_features(image_path, num_images, embedding, device, nfeature
     des = np.expand_dims(des, axis=0)
     des = np.reshape(des, (des.shape[0], -1))
     
-    n_components = min(embedding.shape[1], des.shape[1])
+    n_components = min(embedding.shape[0], embedding.shape[1], des.shape[1])
     pca = PCA(n_components=n_components)
     
     reduced_embedding = pca.fit_transform(embedding)
