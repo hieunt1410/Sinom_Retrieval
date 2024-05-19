@@ -22,5 +22,5 @@ EMBEDDING_SHAPE = (1, 256, 16, 16)
 # TEST_RATIO = 0.2
 
 ###### Test time #########
-NUM_IMAGES = 5
+NUM_IMAGES = 2
 TEST_IMAGE_PATH = "../queries/5.png"
