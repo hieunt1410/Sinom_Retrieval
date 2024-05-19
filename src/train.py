@@ -123,7 +123,7 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
         decoder = getattr(models, 'ConvDecoder')()
         decoder = load_model(decoder, 'decoder', hyp_params.device)
         
-        results, truths, val_loss = evaluate(encoder, decoder, criterion, test=True)
+        val_loss = evaluate(encoder, decoder, criterion, test=True)
         # test_mrr = metrics(results, truths)
         
         print("\n\nTest loss {:5.4f}".format(val_loss))
