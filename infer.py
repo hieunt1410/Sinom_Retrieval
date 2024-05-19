@@ -45,7 +45,7 @@ def compute_similar_images(image_path, num_images, embedding, encoder, device):
     return indices_list
 
 
-def compute_similar_features(image_path, num_images, embedding, device, nfeatures=3):
+def compute_similar_features(image_path, num_images, embedding, device, nfeatures=20):
     image = cv2.imread(image_path)
     orb = cv2.ORB_create(nfeatures=nfeatures)
     
@@ -58,7 +58,7 @@ def compute_similar_features(image_path, num_images, embedding, device, nfeature
     des = np.expand_dims(des, axis=0)
     des = np.reshape(des, (des.shape[0], -1))
     
-    pca = PCA(n_components=des.shape[-1])
+    pca = PCA(n_components=10)
     reduced_embedding = pca.fit_transform(embedding)
     
     knn = NearestNeighbors(n_neighbors=num_images, metric='cosine')
