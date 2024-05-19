@@ -58,7 +58,7 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
         
         results = []
         truths = []
-        loss = 0
+        losses = 0
             
         for batch_idx, (query_img, target_img) in enumerate(train_loader):
             query_img = query_img.to(hyp_params.device)
@@ -69,15 +69,16 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
             enc_output = encoder(query_img)
             dec_output = decoder(enc_output)
             
-            loss += criterion(dec_output, target_img).item()
+            loss = criterion(dec_output, target_img)            
+            loss.backward()
+            
+            losses += loss.item()
             results.append(dec_output)
             truths.append(target_img)
             
-            loss.backward()
-            
             optimizer.step()
         
-        return torch.cat(results), torch.cat(truths), loss/len(train_loader)
+        return torch.cat(results), torch.cat(truths), losses/len(train_loader)
             
 
     def evaluate(encoder, decoder, criterion, test=False):
@@ -87,7 +88,7 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
         with torch.no_grad():
             results = []
             truths = []
-            loss = 0
+            losses = 0
             
             for batch_idx, (query_img, target_img) in enumerate(valid_loader if not test else test_loader):
                 query_img = query_img.to(hyp_params.device)
@@ -96,12 +97,13 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
                 enc_output = encoder(query_img)
                 dec_output = decoder(enc_output)
                 
-                loss += criterion(dec_output, target_img).item()
+                loss = criterion(dec_output, target_img)
+                losses += loss.item()
                 
                 results.append(dec_output)
                 truths.append(target_img)
         
-        return torch.cat(results), torch.cat(truths), loss/len(valid_loader if not test else test_loader)
+        return torch.cat(results), torch.cat(truths), losses/len(valid_loader if not test else test_loader)
 
     best_valid = 1e8
     # writer = SummaryWriter('runs/'+hyp_params.model)
