@@ -19,10 +19,10 @@ import configs.config as cf
 import os
 
 def initiate(hyp_params, train_loader, valid_loader, test_loader=None):
-    encoder = getattr(models, 'ConvEncoder')
+    encoder = getattr(models, 'ConvEncoder')()
     encoder.to(hyp_params.device)
     
-    decoder = getattr(models, 'ConvDecoder')
+    decoder = getattr(models, 'ConvDecoder')()
     decoder.to(hyp_params.device)
     
     optimizer = getattr(optim, hyp_params.optim)(model.parameters(), lr=hyp_params.lr, weight_decay=1e-4)
