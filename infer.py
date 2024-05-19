@@ -88,7 +88,7 @@ if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
     encoder = models.ConvEncoder()
-    encoder.load_state_dict(torch.load('pretrained_models/encoder.pt', map_location=device))
+    load_model(encoder, 'encoder', device)
     encoder.to(device)
     encoder.eval()
     

@@ -126,17 +126,17 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
 
         if val_loss < best_valid:
             print(f"Saved model at pretrained_models/default_model.pt!")
-            save_model(hyp_params, encoder, 'encoder')
-            save_model(hyp_params, decoder, 'decoder')
+            save_model(encoder, 'encoder', hyp_params.device)
+            save_model(decoder, 'decoder', hyp_params.device)
             
             best_valid = val_loss
             
             
     if test_loader is not None:
         encoder = getattr(models, 'ConvEncoder')()
-        encoder = load_model(hyp_params, encoder, 'encoder')
+        encoder = load_model(encoder, 'encoder', hyp_params.device)
         decoder = getattr(models, 'ConvDecoder')()
-        decoder = load_model(hyp_params, decoder, 'decoder')
+        decoder = load_model(decoder, 'decoder', hyp_params.device)
         
         results, truths, val_loss = evaluate(encoder, decoder, criterion, test=True)
         # test_mrr = metrics(results, truths)

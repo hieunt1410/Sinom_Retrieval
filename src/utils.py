@@ -13,8 +13,7 @@ def get_data(args, split='train'):
     return data
 
 
-def save_model(args, model, name):
-    # name = name if len(name) > 0 else 'default_model'
+def save_model(model, name, device):
     if not os.path.exists('pretrained'):
         os.makedirs('pretrained')
         
@@ -24,10 +23,10 @@ def save_model(args, model, name):
         torch.save(model.state_dict(), cfg.DECODER_MODEL_PATH)
 
 
-def load_model(args, model, name):
+def load_model(model, name, device):
     if name == 'encoder':
-        model.load_state_dict(torch.load(cfg.ENCODER_MODEL_PATH, map_location=args.device))
+        model.load_state_dict(torch.load(cfg.ENCODER_MODEL_PATH, map_location=device))
     else:
-        model.load_state_dict(torch.load(cfg.DECODER_MODEL_PATH, map_location=args.device))
+        model.load_state_dict(torch.load(cfg.DECODER_MODEL_PATH, map_location=device))
         
     return model
