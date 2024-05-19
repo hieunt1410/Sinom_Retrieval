@@ -2,7 +2,7 @@ from src.dataset import *
 from torchvision import transforms
 import torch
 import os
-
+import configs.config as cfg
 
 def get_data(args, split='train'):
     data = ImgDataset(args.data_path, split, transform=transforms.Compose([
@@ -15,12 +15,19 @@ def get_data(args, split='train'):
 
 def save_model(args, model, name):
     # name = name if len(name) > 0 else 'default_model'
-    if not os.path.exists('pretrained_models'):
-        os.makedirs('pretrained_models')
-    torch.save(model, f'pretrained_models/{name}.pt')
+    if not os.path.exists('pretrained'):
+        os.makedirs('pretrained')
+        
+    if name == 'encoder':
+        torch.save(model.state_dict(), cfg.ENCODER_MODEL_PATH)
+    else:
+        torch.save(model.state_dict(), cfg.DECODER_MODEL_PATH)
 
 
-def load_model(args, name=''):
-    # name = name if len(name) > 0 else 'default_model'
-    model = torch.load(f'pretrained_models/{name}.pt')
+def load_model(args, model, name):
+    if name == 'encoder':
+        model.load_state_dict(torch.load(cfg.ENCODER_MODEL_PATH, map_location=args.device))
+    else:
+        model.load_state_dict(torch.load(cfg.DECODER_MODEL_PATH, map_location=args.device))
+        
     return model

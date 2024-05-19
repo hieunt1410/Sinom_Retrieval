@@ -133,7 +133,9 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
             
             
     if test_loader is not None:
-        model = load_model(hyp_params)
+        encoder = getattr(models, 'ConvEncoder')()
+        encoder = load_model(hyp_params, encoder, 'encoder')
+        
         results, truths, val_loss = evaluate(model, criterion, test=True)
         # test_mrr = metrics(results, truths)
         
