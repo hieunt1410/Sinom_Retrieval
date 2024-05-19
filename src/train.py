@@ -25,7 +25,8 @@ def initiate(hyp_params, train_loader, valid_loader, test_loader=None):
     decoder = getattr(models, 'ConvDecoder')()
     decoder.to(hyp_params.device)
     
-    optimizer = getattr(optim, hyp_params.optim)(model.parameters(), lr=hyp_params.lr, weight_decay=1e-4)
+    autoencoder_params = list(encoder.parameters()) + list(decoder.parameters())
+    optimizer = getattr(optim, hyp_params.optim)(autoencoder_params, lr=hyp_params.lr, weight_decay=1e-4)
     criterion = getattr(nn, hyp_params.criterion)()
     
     scheduler = ReduceLROnPlateau(optimizer, mode='min', patience=hyp_params.when, factor=0.1, verbose=True)
