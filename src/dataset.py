@@ -33,8 +33,8 @@ class ImgDataset(Dataset):
         img_query_loc = os.path.join(self.path, 'queries', self.query[idx])
         img_target_loc = os.path.join(self.path, 'database_2D', self.target[idx])
         
-        img_query = Image.open(img_query_loc).convert('L')
-        img_target = Image.open(img_target_loc).convert('L')
+        img_query = Image.open(img_query_loc).convert('RGB')
+        img_target = Image.open(img_target_loc).convert('RGB')
         
         if self.transform is not None:
             img_query = self.transform(img_query)

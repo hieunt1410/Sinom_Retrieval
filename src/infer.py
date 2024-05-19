@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 
 def load_img_tensor(image_path):
-    image_tensor = transforms.ToTensor()(Image.open(image_path).convert('L'))
+    image_tensor = transforms.ToTensor()(Image.open(image_path).convert('RGB'))
     image_tensor = image_tensor.unsqueeze(0)
     
     return image_tensor
@@ -78,7 +78,7 @@ def plot_similar_images(test_img_path, indices_list):
     for index in indices:
         img_name = str(index) + '.png'
         img_path = os.path.join(cfg.DATA_PATH, 'database_2D', img_name)
-        img = Image.open(img_path).convert('L')
+        img = Image.open(img_path).convert('RGB')
         plt.imshow(img)
         plt.show()
         img.save(os.path.join(f'../outputs/{test_img_name}', img_name))
