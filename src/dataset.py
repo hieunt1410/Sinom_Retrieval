@@ -8,34 +8,36 @@ from torch.utils.data.dataset import Dataset
 
 class ImgDataset(Dataset):
     def __init__(self, path, split, transform=None):
+        self.path = path
         self.transform = transform
         
-        self.targets = []
-        self.images = []
-        with open(os.path.join(path, f'{split}.csv'), 'r') as f:
-            line = f.readlines()
-            for i in line:
-                self.targets.append(int(i.strip()))
-                if split != 'test':
-                    self.images.append(os.path.join(path, f'pairs/print/{i.strip()}.png'))
-                else:
-                    self.images.append(os.path.join(path, f'queries/{i.strip()}.png'))
+        querylist = os.listdir(os.path.join(path, 'queries'))
+        targetlist = os.listdir(os.path.join(path, 'database_2D'))
+        querylist = sorted(querylist)
+        targetlist = sorted(targetlist)
+        
+        if split == 'train':
+            self.query = querylist
+            self.target = targetlist
+        elif split == 'valid':
+            self.query = querylist[int(0.8*len(querylist)):int(0.9*len(querylist))]
+            self.target = targetlist[int(0.8*len(targetlist)):int(0.9*len(targetlist))]
+        elif split == 'test':
+            self.query = querylist[int(0.9*len(querylist)):]
+            self.target = targetlist[int(0.9*len(targetlist)):]
 
     def __len__(self):
-        return len(self.images)
+        return len(self.query)
     
     def __getitem__(self, idx):
-        img_path = self.images[idx]
+        img_query_loc = os.path.join(self.path, 'queries', self.query[idx])
+        img_target_loc = os.path.join(self.path, 'database_2D', self.target[idx])
         
-        img = Image.open(img_path).convert('RGB')
-        target = [0] * 252
-        target[self.targets[idx]] = 1
-        # target = self.targets[idx]
+        img_query = Image.open(img_query_loc).convert('L')
+        img_target = Image.open(img_target_loc).convert('L')
         
-        if self.transform:
-            img = self.transform(img)
-        
-        return {
-            'image': img,
-            'label': torch.FloatTensor(target)
-        }
+        if self.transform is not None:
+            img_query = self.transform(img_query)
+            img_target = self.transform(img_target)
+            
+        return img_query, img_target

@@ -14,20 +14,24 @@ from torch import nn
 from tqdm import tqdm
 
 from src.metrics import *
+import configs.config as cf
 
 import os
 
 def initiate(hyp_params, train_loader, valid_loader, test_loader=None):
-    model = getattr(models, hyp_params.model)(252)
-    model.to(hyp_params.device)
+    encoder = getattr(models, 'ConvEncoder')
+    encoder.to(hyp_params.device)
+    
+    decoder = getattr(models, 'ConvDecoder')
+    decoder.to(hyp_params.device)
     
     optimizer = getattr(optim, hyp_params.optim)(model.parameters(), lr=hyp_params.lr, weight_decay=1e-4)
     criterion = getattr(nn, hyp_params.criterion)()
     
     scheduler = ReduceLROnPlateau(optimizer, mode='min', patience=hyp_params.when, factor=0.1, verbose=True)
     
-    
-    settings = {'model': model,
+    settings = {'encoder': encoder,
+                'decoder': decoder,
                 'optimizer': optimizer,
                 'criterion': criterion,
                 'scheduler': scheduler}
@@ -41,93 +45,76 @@ def initiate(hyp_params, train_loader, valid_loader, test_loader=None):
 ####################################################################
 
 def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
-    model = settings['model']
+    encoder = settings['encoder']
+    decoder = settings['decoder']
     optimizer = settings['optimizer']
     criterion = settings['criterion']
     scheduler = settings['scheduler']
     
-    def train(model, optimizer, criterion):
-        epoch_loss = 0
-        model.train()
-        num_batches = hyp_params.n_train // hyp_params.batch_size
-        proc_loss, proc_size = 0, 0
-        total_loss = 0.0
-        losses = []
+    def train(encoder, decoder, optimizer, criterion):
+        encoder.train()
+        decoder.train()
+        
         results = []
         truths = []
-
-        for data_batch in tqdm(train_loader):
-            targets = data_batch["label"]
-            images = data_batch['image']
+        loss = 0
             
-            targets = targets.to(hyp_params.device)
-            images = images.to(hyp_params.device)
-
+        for batch_idx, (query_img, target_img) in enumerate(train_loader):
+            query_img = query_img.to(hyp_params.device)
+            target_img = target_img.to(hyp_params.device)
+            
             optimizer.zero_grad()
-
-            outputs = model(images)
-            preds = outputs
             
-            loss = criterion(outputs, targets)
-            losses.append(loss.item())
+            enc_output = encoder(query_img)
+            dec_output = decoder(enc_output)
+            
+            loss += criterion(dec_output, target_img).item()
+            results.append(dec_output)
+            truths.append(target_img)
+            
             loss.backward()
-            nn.utils.clip_grad_norm_(model.parameters(), hyp_params.clip)
-            optimizer.step()
             
-            total_loss += loss.item() * hyp_params.batch_size
-            results.append(preds)
-            truths.append(targets)
-                
-        avg_loss = total_loss / hyp_params.n_train
-        results = torch.cat(results)
-        truths = torch.cat(truths)
-        return results, truths, avg_loss
+            optimizer.step()
+        
+        return torch.cat(results), torch.cat(truths), loss/len(train_loader)
+            
 
-    def evaluate(model, criterion, test=False):
-        model.eval()
-        loader = test_loader if test else valid_loader
-        total_loss = 0.0
-
-        results = []
-        truths = []
-        correct_predictions = 0
-
+    def evaluate(encoder, decoder, criterion, test=False):
+        encoder.eval()
+        decoder.eval()
+        
         with torch.no_grad():
-            for data_batch in loader:
-                targets = data_batch["label"]
-                images = data_batch['image']
+            results = []
+            truths = []
+            loss = 0
+            
+            for batch_idx, (query_img, target_img) in enumerate(valid_loader if not test else test_loader):
+                query_img = query_img.to(hyp_params.device)
+                target_img = target_img.to(hyp_params.device)
                 
-                # input_ids = input_ids.to(hyp_params.device)
-                targets = targets.to(hyp_params.device)
-                images = images.to(hyp_params.device)            
-
-                outputs = model(images)
-                preds = outputs
+                enc_output = encoder(query_img)
+                dec_output = decoder(enc_output)
                 
-                total_loss += criterion(outputs, targets).item() * hyp_params.batch_size
-                correct_predictions += torch.sum(preds == targets)
-
-                # Collect the results into dictionary
-                results.append(preds)
-                truths.append(targets)
-
-        avg_loss = total_loss / (hyp_params.n_test if test else hyp_params.n_valid)
-
-        results = torch.cat(results)
-        truths = torch.cat(truths)
-        return results, truths, avg_loss
+                loss += criterion(dec_output, target_img).item()
+                
+                results.append(dec_output)
+                truths.append(target_img)
+        
+        return torch.cat(results), torch.cat(truths), loss/len(valid_loader if not test else test_loader)
 
     best_valid = 1e8
     # writer = SummaryWriter('runs/'+hyp_params.model)
     for epoch in range(1, hyp_params.num_epochs+1):
         
-        train_results, train_truths, train_loss = train(model, optimizer, criterion)
-        val_results, val_truths, val_loss = evaluate(model, criterion, test=False)
+        train_results, train_truths, train_loss = train(encoder, decoder, optimizer, criterion)
+        val_results, val_truths, val_loss = evaluate(encoder, decoder, criterion, test=False)
         
         scheduler.step(val_loss)
 
-        train_mrr= metrics(train_results, train_truths)
-        val_mrr = metrics(val_results, val_truths)
+        # train_mrr= metrics(train_results, train_truths)
+        # val_mrr = metrics(val_results, val_truths)
+        train_mrr = 0
+        val_mrr = 0
         
         if epoch == 1:
             print(f'Epoch  |     Train Loss     |     Train MRR     |     Valid Loss     |     Valid MRR     |')
@@ -136,14 +123,44 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
 
         if val_loss < best_valid:
             print(f"Saved model at pretrained_models/default_model.pt!")
-            save_model(hyp_params, model)
+            save_model(hyp_params, encoder, 'encoder')
+            save_model(hyp_params, decoder, 'decoder')
+            
             best_valid = val_loss
-
+            
+            
     if test_loader is not None:
         model = load_model(hyp_params)
         results, truths, val_loss = evaluate(model, criterion, test=True)
-        test_mrr = metrics(results, truths)
+        # test_mrr = metrics(results, truths)
         
-        print("\n\nTest MRR {:5.4f}".format(test_mrr))
+        print("\n\nTest loss {:5.4f}".format(val_loss))
+        
+
+    def create_embedding(self, encoder, full_loader, embedding_dim):
+        encoder.eval()
+        
+        embedding = torch.randn(embedding_dim)
+        
+        with torch.no_grad():
+            for batch_idx, (query_img, target_img) in enumerate(full_loader):
+                query_img = query_img.to(hyp_params.device)
+                target_img = target_img.to(hyp_params.device)
+                
+                enc_output = encoder(query_img)
+                
+                embedding = torch.cat((embedding, enc_output), dim=0)
+                
+        return embedding
+    
+    embedding = self.create_embedding(
+        encoder, train_loader, cfg.EMBEDDING_SHAPE, device
+    )
+    
+    numpy_embedding = embedding.cpu().detach().numpy()
+    num_images = numpy_embedding.shape[0]
+    
+    flatten_embedding = numpy_embedding.reshape((num_images, -1))
+    np.save(cfg.EMBEDDING_PATH, flatten_embedding)
 
     sys.stdout.flush()

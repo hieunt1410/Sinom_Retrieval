@@ -8,9 +8,8 @@ import os
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--model', type=str, default='CNN', help='name of the model to use.')
 parser.add_argument('--data_path', type=str, default='data', help='path for storing the dataset')
-parser.add_argument('--batch_size', type=int, default=128, metavar='N', help='batch size')
+parser.add_argument('--batch_size', type=int, default=256, metavar='N', help='batch size')
 parser.add_argument('--clip', type=float, default=0.8, help='gradient clip value (default: 0.8)')
 parser.add_argument('--lr', type=float, default=2e-5, help='initial learning rate (default: 2e-5)')
 parser.add_argument('--optim', type=str, default='AdamW', help='optimizer to use (default: AdamW)')
@@ -20,9 +19,8 @@ parser.add_argument('--seed', type=int, default=2024, help='random seed')
 parser.add_argument('--when', type=int, default=2, help='when to decay learning rate (default: 2)')
 
 args = parser.parse_args()
-output_dim = 252
 
-criterion = 'CrossEntropyLoss'
+criterion = 'MSELoss'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 torch.set_default_tensor_type(torch.FloatTensor)
 
@@ -40,8 +38,6 @@ hyp_params = args
 hyp_params.device = device
 hyp_params.n_train, hyp_params.n_valid, hyp_params.n_test = len(train_data), len(valid_data), len(test_data)
     
-hyp_params.model = args.model.strip()
-hyp_params.output_dim = output_dim
 hyp_params.criterion = criterion
 
 if __name__ == '__main__':

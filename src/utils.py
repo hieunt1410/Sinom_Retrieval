@@ -13,14 +13,14 @@ def get_data(args, split='train'):
     return data
 
 
-def save_model(args, model, name=''):
-    name = name if len(name) > 0 else 'default_model'
+def save_model(args, model, name):
+    # name = name if len(name) > 0 else 'default_model'
     if not os.path.exists('pretrained_models'):
         os.makedirs('pretrained_models')
     torch.save(model, f'pretrained_models/{name}.pt')
 
 
 def load_model(args, name=''):
-    name = name if len(name) > 0 else 'default_model'
+    # name = name if len(name) > 0 else 'default_model'
     model = torch.load(f'pretrained_models/{name}.pt')
     return model
