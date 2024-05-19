@@ -161,8 +161,7 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
         return embedding
     
     embedding = create_embedding(
-        encoder, train_loader, cfg.EMBEDDING_SHAPE, device
-    )
+        encoder, train_loader, cfg.EMBEDDING_SHAPE)
     
     numpy_embedding = embedding.cpu().detach().numpy()
     num_images = numpy_embedding.shape[0]
