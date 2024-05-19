@@ -94,8 +94,8 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
     # writer = SummaryWriter('runs/'+hyp_params.model)
     for epoch in range(1, hyp_params.num_epochs+1):
         
-        train_results, train_truths, train_loss = train(encoder, decoder, optimizer, criterion)
-        val_results, val_truths, val_loss = evaluate(encoder, decoder, criterion, test=False)
+        train_loss = train(encoder, decoder, optimizer, criterion)
+        val_loss = evaluate(encoder, decoder, criterion, test=False)
         
         scheduler.step(val_loss)
 
