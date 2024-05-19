@@ -13,8 +13,15 @@ from sklearn.neighbors import NearestNeighbors
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 
+
+transform = transforms.Compose([
+                transforms.Resize((512, 512)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+                ])
+
 def load_img_tensor(image_path):
-    image_tensor = transforms.ToTensor()(Image.open(image_path).convert('RGB'))
+    image_tensor = transform(Image.open(image_path).convert('RGB'))
     image_tensor = image_tensor.unsqueeze(0)
     
     return image_tensor
@@ -30,7 +37,7 @@ def compute_similar_images(image_path, num_images, embedding, encoder, device):
     flatten_embedding = embedding.reshape((embedding.shape[0], -1))
     
     knn = NearestNeighbors(n_neighbors=num_images, metric='cosine')
-    knn.fit(flatten_embedding)
+    knn.fit(embedding)
     
     _, indices = knn.kneighbors(image_embedding)
     indices_list = indices.tolist()
