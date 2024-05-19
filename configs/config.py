@@ -13,7 +13,7 @@ FULL_BATCH_SIZE = 256
 
 ###### Train and Test time #########
 
-DATA_PATH = "../../"
+DATA_PATH = "../"
 AUTOENCODER_MODEL_PATH = "baseline_autoencoder.pt"
 ENCODER_MODEL_PATH = "../pretrained/deep_encoder.pt"
 DECODER_MODEL_PATH = "../pretrained/deep_decoder.pt"
@@ -23,4 +23,4 @@ EMBEDDING_SHAPE = (1, 256, 16, 16)
 
 ###### Test time #########
 NUM_IMAGES = 5
-TEST_IMAGE_PATH = "../../queries/5.png"
+TEST_IMAGE_PATH = "../queries/5.png"
