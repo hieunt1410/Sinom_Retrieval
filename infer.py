@@ -45,7 +45,7 @@ def compute_similar_images(image_path, num_images, embedding, encoder, device):
     return indices_list
 
 
-def compute_similar_features(image_path, num_images, embedding, device, nfeatures=30):
+def compute_similar_features(image_path, num_images, embedding, device, nfeatures=10):
     image = cv2.imread(image_path)
     orb = cv2.ORB_create(nfeatures=nfeatures)
     
