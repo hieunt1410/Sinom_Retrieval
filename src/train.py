@@ -123,6 +123,9 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
         decoder = getattr(models, 'ConvDecoder')()
         decoder = load_model(decoder, 'decoder', hyp_params.device)
         
+        encoder = encoder.to(hyp_params.device)
+        decoder = decoder.to(hyp_params.device)
+        
         val_loss = evaluate(encoder, decoder, criterion, test=True)
         # test_mrr = metrics(results, truths)
         
