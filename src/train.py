@@ -136,6 +136,7 @@ def train_model(settings, hyp_params, train_loader, valid_loader, test_loader):
         encoder.eval()
         
         embedding = torch.randn(embedding_dim)
+        embedding = embedding.to(hyp_params.device)
         
         with torch.no_grad():
             for batch_idx, (query_img, target_img) in enumerate(full_loader):
