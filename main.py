@@ -11,7 +11,7 @@ import configs.config as cfg
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--data_path', type=str, default='../', help='path for storing the dataset')
-parser.add_argument('--batch_size', type=int, default=256, metavar='N', help='batch size')
+parser.add_argument('--batch_size', type=int, default=32, metavar='N', help='batch size')
 parser.add_argument('--clip', type=float, default=0.8, help='gradient clip value (default: 0.8)')
 parser.add_argument('--lr', type=float, default=2e-3, help='initial learning rate (default: 2e-5)')
 parser.add_argument('--optim', type=str, default='AdamW', help='optimizer to use (default: AdamW)')
