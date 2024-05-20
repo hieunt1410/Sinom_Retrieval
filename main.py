@@ -22,6 +22,8 @@ parser.add_argument('--when', type=int, default=2, help='when to decay learning 
 
 args = parser.parse_args()
 
+torch.manual_seed(args.seed)
+
 criterion = 'MSELoss'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 torch.set_default_tensor_type(torch.FloatTensor)
